@@ -1,0 +1,44 @@
+{
+  "pflotsh-ecmwf": [
+    "pflotsh-ecmwf-subscription-unlock"
+  ],
+  "reddit": [
+    "general-reddit-ads",
+    "premium-icon-reddit"
+  ],
+  "tiktok": [
+    "tiktok-ads"
+  ],
+  "twitter": [
+    "timeline-ads"
+  ],
+  "warnwetter": [
+    "promo-code-unlock"
+  ],
+  "youtube": [
+    "amoled",
+    "disable-create-button",
+    "return-youtube-dislike",
+    "custom-branding",
+    "old-quality-layout",
+    "hide-watermark",
+    "sponsorblock",
+    "minimized-playback",
+    "client-spoof",
+    "microg-support",
+    "settings",
+    "video-ads",
+    "general-ads"
+  ],
+  "youtube-music": [
+    "minimized-playback-music",
+    "tasteBuilder-remover",
+    "hide-get-premium",
+    "upgrade-button-remover",
+    "background-play",
+    "music-microg-support",
+    "music-video-ads",
+    "codecs-unlock",
+    "exclusive-audio-playback"
+  ]
+}
