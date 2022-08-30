@@ -1,1 +1,1 @@
-# revanced
+# ReVanced
