@@ -1,21 +1,19 @@
 {
-  "pflotsh-ecmwf": [
+  "com.garzotto.pflotsh.ecmwf_a": [
     "pflotsh-ecmwf-subscription-unlock"
   ],
-  "reddit": [
-    "general-reddit-ads",
-    "premium-icon-reddit"
+  "com.google.android.apps.youtube.music": [
+    "minimized-playback-music",
+    "tasteBuilder-remover",
+    "hide-get-premium",
+    "upgrade-button-remover",
+    "background-play",
+    "music-microg-support",
+    "music-video-ads",
+    "codecs-unlock",
+    "exclusive-audio-playback"
   ],
-  "tiktok": [
-    "tiktok-ads"
-  ],
-  "twitter": [
-    "timeline-ads"
-  ],
-  "warnwetter": [
-    "promo-code-unlock"
-  ],
-  "youtube": [
+  "com.google.android.youtube": [
     "amoled",
     "disable-create-button",
     "return-youtube-dislike",
@@ -30,15 +28,17 @@
     "video-ads",
     "general-ads"
   ],
-  "youtube-music": [
-    "minimized-playback-music",
-    "tasteBuilder-remover",
-    "hide-get-premium",
-    "upgrade-button-remover",
-    "background-play",
-    "music-microg-support",
-    "music-video-ads",
-    "codecs-unlock",
-    "exclusive-audio-playback"
+  "com.reddit.frontpage": [
+    "general-reddit-ads",
+    "premium-icon-reddit"
+  ],
+  "com.ss.android.ugc.trill": [
+    "tiktok-ads"
+  ],
+  "com.twitter.android": [
+    "timeline-ads"
+  ],
+  "de.dwd.warnapp": [
+    "promo-code-unlock"
   ]
 }
