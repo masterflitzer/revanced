@@ -9,11 +9,14 @@ main () {
     RV_INTEGRATIONS="revanced/revanced-integrations"
     RV_PATCHES="revanced/revanced-patches"
 
-    APP_REDDIT="reddit"
-    APP_TIKTOK="tiktok"
-    APP_TWITTER="twitter"
-    APP_YOUTUBE="youtube"
-    APP_YOUTUBE_MUSIC="youtube-music"
+    APP_PFLOTSH_ECMWF="com.garzotto.pflotsh.ecmwf_a"
+    APP_REDDIT="com.reddit.frontpage"
+    APP_TIKTOK="com.ss.android.ugc.trill"
+    APP_TWITTER="com.twitter.android"
+    APP_WARNWETTER="de.dwd.warnapp"
+    APP_YOUTUBE="com.google.android.youtube"
+    APP_YOUTUBE_MUSIC="com.google.android.apps.youtube.music"
+    APPS=($APP_PFLOTSH_ECMWF $APP_REDDIT $APP_TIKTOK $APP_TWITTER $APP_WARNWETTER $APP_YOUTUBE $APP_YOUTUBE_MUSIC)
 
     if test "-r" = $1
     then
@@ -44,12 +47,14 @@ EOF
     cat << EOF
 
 Following apps can be patched:
-      App                  File                 Package
-    * Reddit               $APP_REDDIT.apk           com.reddit.frontpage
-    * TikTok               $APP_TIKTOK.apk           com.ss.android.ugc.trill
-    * Twitter              $APP_TWITTER.apk          com.twitter.android
-    * YouTube (*)          $APP_YOUTUBE.apk          com.google.android.youtube
-    * YouTube Music (*)    $APP_YOUTUBE_MUSIC.apk    com.google.android.apps.youtube.music
+      App                  Package
+    * Pflotsh ECMWF        $APP_PFLOTSH_ECMWF.apk
+    * Reddit               $APP_REDDIT.apk
+    * TikTok               $APP_TIKTOK.apk
+    * Twitter              $APP_TWITTER.apk
+    * WarnWetter           $APP_WARNWETTER.apk
+    * YouTube (*)          $APP_YOUTUBE.apk
+    * YouTube Music (*)    $APP_YOUTUBE_MUSIC.apk
 
 With (*) marked apps need microG to work on non-rooted devices
 The microg patch will automatically be ignored if you specify the '-r' option for a root build
@@ -59,9 +64,11 @@ Here you can get the list of available patches: https://github.com/revanced/reva
 In order to patch an app you need to put the apk (not bundled) in the same directory as this script is and name it as shown above
 
 You can download apk files from the following sources:
+    * Pflotsh ECMWF:    **not available on apkmirror**
     * Reddit:           https://apkmirror.com/apk/redditinc/reddit/
     * TikTok:           https://apkmirror.com/apk/tiktok-pte-ltd/tik-tok/
     * Twitter:          https://apkmirror.com/apk/twitter-inc/twitter/
+    * WarnWetter:       https://apkmirror.com/apk/deutscher-wetterdienst/warnwetter/
     * YouTube:          https://apkmirror.com/apk/google-inc/youtube/
     * YouTube Music:    https://apkmirror.com/apk/google-inc/youtube-music/
     * Vanced microG:    https://apkmirror.com/apk/team-vanced/microg-youtube-vanced/
@@ -72,42 +79,36 @@ EOF
     revanced_download $RV_INTEGRATIONS apk
     revanced_download $RV_PATCHES jar
 
-    if test -f "$CWD/$APP_REDDIT.apk"
-    then
-        revanced_execute $APP_REDDIT
-    fi
+    printf "\nDiscovering apps\n\n"
 
-    if test -f "$CWD/$APP_TIKTOK.apk"
-    then
-        revanced_execute $APP_TIKTOK
-    fi
+    for i in ${APPS[@]}
+    do
+        FILE="$i.apk"
+        if test -f "$CWD/$FILE"
+        then
+            echo "Found $FILE"
+            revanced_execute $i
+        else
+            echo "Didn't find $FILE"
+        fi
+    done
 
-    if test -f "$CWD/$APP_TWITTER.apk"
-    then
-        revanced_execute $APP_TWITTER
-    fi
-
-    if test -f "$CWD/$APP_YOUTUBE.apk"
-    then
-        revanced_execute $APP_YOUTUBE
-    fi
-
-    if test -f "$CWD/$APP_YOUTUBE_MUSIC.apk"
-    then
-        revanced_execute $APP_YOUTUBE_MUSIC
-    fi
+    printf "\nDone\n\n"
 }
 
 revanced_download () {
     GH_REPO=$1
     FILE_EXT=$2
-    for i in $(curl -Ls "https://api.github.com/repos/$GH_REPO/releases/latest" | jq -r '.assets[].browser_download_url | @base64')
+    DL_B64=$(curl -Ls "https://api.github.com/repos/$GH_REPO/releases/latest" | jq -r '.assets[].browser_download_url | @base64')
+    for i in ${DL_B64[@]}
     do
         DL=$(base64 -d <<< $i)
         if [[ $DL =~ ^.*\.$FILE_EXT$ ]]
         then
-            FILE=$(awk -F / '{ print $NF }' <<< $GH_REPO)
-            curl -Lso "$CWD/$FILE.$FILE_EXT" $DL
+            FILE_NAME=$(awk -F / '{ print $NF }' <<< $GH_REPO)
+            FILE="$FILE_NAME.$FILE_EXT"
+            echo "Downloading $FILE"
+            curl -Lso "$CWD/$FILE" $DL
         fi
     done
 }
@@ -116,6 +117,7 @@ revanced_execute () {
     APP=$1
     PATCHES_CLI=""
     revanced_patches $APP
+    printf "\nPatching $APP\n\n"
     java -jar revanced-cli.jar \
          -a $APP.apk \
          -b revanced-patches.jar \
@@ -125,33 +127,19 @@ revanced_execute () {
          --exclusive \
          --experimental \
          $PATCHES_CLI
+    echo ""
 }
 
 revanced_patches () {
     APP=$1
-    PATCHES=()
-    case $APP in
-        $APP_REDDIT)
-            PATCHES=($(jq -r ".$APP_REDDIT[]" $CONFIG | tr '\n' ' '))
-            ;;
-        $APP_TIKTOK)
-            PATCHES=($(jq -r ".$APP_TIKTOK[]" $CONFIG | tr '\n' ' '))
-            ;;
-        $APP_TWITTER)
-            PATCHES=($(jq -r ".$APP_TWITTER[]" $CONFIG | tr '\n' ' '))
-            ;;
-        $APP_YOUTUBE)
-            PATCHES=($(jq -r ".$APP_YOUTUBE[]" $CONFIG | tr '\n' ' '))
-            ;;
-        $APP_YOUTUBE_MUSIC)
-            PATCHES=($(jq -r ".$APP_YOUTUBE_MUSIC[]" $CONFIG | tr '\n' ' '))
-            ;;
-    esac
+    printf "\nParsing config for $APP\n"
+    PATCHES=($(jq -r ".\"$APP\"[]" $CONFIG | tr '\n' ' '))
 
     for i in ${PATCHES[@]}
     do
         if (test "microg-support" = $i || test "music-microg-support" = $i) && test "true" = $ROOT
         then
+            echo "Skipping microG patch"
             continue
         fi
 
