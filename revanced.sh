@@ -123,7 +123,7 @@ revanced_execute () {
          -b revanced-patches.jar \
          -c \
          -m revanced-integrations.apk \
-         -o $APP-revanced.apk \
+         -o revanced-$APP.apk \
          --exclusive \
          --experimental \
          $PATCHES_CLI
