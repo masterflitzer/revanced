@@ -2,18 +2,35 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
-
+    branches:
+      - main
+  schedule:
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
-  build:
+  main:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@v1.1.0
 
-      - name: Run a one-line script
+      - name: Download apps
+        run: deno download-apps.js
+
+      - name: Download revanced & patch apps
         run: bash revanced.sh
+
+      - name: Release patched apps
+        run: |
+          cd revanced
+          gh release delete release -y
+          git tag -d release
+          gh release create release -t "ReVanced Builds" -n "For more information consult the [readme](https://github.com/masterflitzer/revanced#readme)"
+          for f in *.apk
+          do
+            gh release upload release revanced/$file.apk
+          done
