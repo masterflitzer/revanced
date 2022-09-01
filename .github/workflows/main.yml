@@ -19,7 +19,7 @@ jobs:
       - uses: denoland/setup-deno@v1.1.0
 
       - name: Download apps
-        run: deno download-apps.js
+        run: deno run --allow-net --allow-read=. --allow-write=. download-apps.js
 
       - name: Download revanced & patch apps
         run: bash revanced.sh
