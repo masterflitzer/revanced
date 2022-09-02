@@ -30,7 +30,7 @@ jobs:
           node-version: 16
 
       - name: Install jq
-        run: sudo apt update && sudp apt install -y jq
+        run: sudo apt update && sudo apt install -y jq
 
       - name: Download apps
         run: |
