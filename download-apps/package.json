@@ -1,0 +1,21 @@
+{
+  "name": "download-apps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "tsc && node ."
+  },
+  "keywords": [],
+  "author": "Masterflitzer <60170948+Masterflitzer@users.noreply.github.com>",
+  "license": "MIT",
+  "dependencies": {
+    "jsdom": "^20.0.0",
+    "node-fetch": "^3.2.10",
+    "typescript": "^4.8.2"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^20.0.0"
+  }
+}
