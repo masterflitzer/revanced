@@ -28,7 +28,7 @@ jobs:
           cd download-apps
           npm ci
           npm start
-          mv apps/*.apk ..
+          mv *.apk ..
 
       - name: Download revanced & patch apps
         run: |
