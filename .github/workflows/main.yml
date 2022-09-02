@@ -16,10 +16,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@v1.1.0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "npm"
 
       - name: Download apps
-        run: deno run --allow-net --allow-read=. --allow-write=. download-apps.js
+        run: |
+          cd download-apps
+          npm ci
+          npm start
+          mv apps/*.apk ..
 
       - name: Download revanced & patch apps
         run: bash revanced.sh
