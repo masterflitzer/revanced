@@ -18,10 +18,7 @@ main () {
     APP_YOUTUBE_MUSIC="com.google.android.apps.youtube.music"
     APPS=($APP_PFLOTSH_ECMWF $APP_REDDIT $APP_TIKTOK $APP_TWITTER $APP_WARNWETTER $APP_YOUTUBE $APP_YOUTUBE_MUSIC)
 
-    if test "-r" = $1
-    then
-        ROOT="true"
-    fi
+    test "-r" = $1 && ROOT="true"
 
     if ! (command -v java && command -v jq) &> /dev/null
     then
@@ -118,12 +115,13 @@ revanced_execute () {
     PATCHES_CLI=""
     revanced_patches $APP
     printf "\nPatching $APP\n\n"
+    test -d revanced && mkdir revanced
     java -jar revanced-cli.jar \
          -a $APP.apk \
          -b revanced-patches.jar \
          -c \
          -m revanced-integrations.apk \
-         -o revanced-$APP.apk \
+         -o revanced/revanced-$APP.apk \
          --exclusive \
          --experimental \
          $PATCHES_CLI
