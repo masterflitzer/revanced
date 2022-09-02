@@ -15,11 +15,13 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: "npm"
 
       - name: Download apps
         run: |
@@ -29,7 +31,9 @@ jobs:
           mv apps/*.apk ..
 
       - name: Download revanced & patch apps
-        run: bash revanced.sh
+        run: |
+          cd $GITHUB_WORKSPACE
+          bash revanced.sh
 
       - name: Release patched apps
         run: |
