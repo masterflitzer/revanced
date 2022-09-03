@@ -1,16 +1,13 @@
 #!/usr/bin/env bash
 
-if test ! -d "$HOME/storage/shared"
-then
-    termux-setup-storage
-fi
-
-pkg upgrade -y
-pkg install unzip openjdk-17 nodejs -y
-
 DOWNLOAD="https://github.com/reisxd/revanced-builder/archive/refs/heads/main.zip"
 BUILDER="revanced-builder-main"
 STORAGE="$HOME/storage/shared"
+
+test ! -d "$STORAGE" && termux-setup-storage
+
+pkg upgrade -y
+pkg install unzip openjdk-17 nodejs -y
 
 cd $HOME/
 curl -Lso $BUILDER.zip $DOWNLOAD
@@ -25,10 +22,11 @@ then
 fi
 
 cd $BUILDER/
-mkdir revanced
+test ! -d revanced && mkdir revanced
+test ! -d $STORAGE/revanced && mkdir $STORAGE/revanced
 cp $STORAGE/revanced/revanced.keystore revanced/revanced.keystore
 cp $STORAGE/revanced/includedPatchesList.json includedPatchesList.json
-npm i
+npm ci
 node .
 cp revanced/revanced.keystore $STORAGE/revanced/revanced.keystore
 cp includedPatchesList.json $STORAGE/revanced/includedPatchesList.json
