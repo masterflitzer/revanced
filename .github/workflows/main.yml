@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install jq
+        run: sudo apt update && sudo apt install -y jq
+
+      - name: Download apps
+        run: |
+          cd download-apps
+          npm ci
+          npm start
+          mv *.apk ..
+
+      - name: Download revanced & patch apps
+        run: |
+          cd $GITHUB_WORKSPACE
+          bash revanced.sh
+
+      - name: Release patched apps
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete release -y
+          git tag -d release
+          gh release create release -t "ReVanced Builds" -n "For more information consult the [readme](https://github.com/masterflitzer/revanced#readme)"
+          for f in *.apk
+          do
+            gh release upload release revanced/$file.apk
+          done
