@@ -116,15 +116,18 @@ revanced_execute () {
     revanced_patches $APP
     printf "\nPatching $APP\n\n"
     test -d revanced && mkdir revanced
-    java -jar revanced-cli.jar \
-         -a $APP.apk \
-         -b revanced-patches.jar \
-         -c \
-         -m revanced-integrations.apk \
-         -o revanced/revanced-$APP.apk \
-         --exclusive \
-         --experimental \
-         $PATCHES_CLI
+    (
+        set -x
+        java -jar revanced-cli.jar \
+            -a $APP.apk \
+            -b revanced-patches.jar \
+            -c \
+            -m revanced-integrations.apk \
+            -o revanced/revanced-$APP.apk \
+            --exclusive \
+            --experimental \
+            $PATCHES_CLI
+    )
     echo ""
 }
 
